@@ -57,21 +57,21 @@ async function loadLetters(filterAuthor = null) {
     const container = document.getElementById("letters");
     container.innerHTML = "";
     const buddies = new Set();
-    letters.forEach(r=>{ if(r.fields.Author) buddies.add(r.fields.Author); });
+    letters.forEach(r => { if(r.fields.Author) buddies.add(r.fields.Author); });
     const buddyList = document.getElementById("buddies");
     buddyList.innerHTML = "";
-    Array.from(buddies).forEach(author=>{
+    Array.from(buddies).forEach(author => {
       const li = document.createElement("li");
       li.textContent = author;
-      li.onclick = ()=>loadLetters(author);
+      li.onclick = () => loadLetters(author);
       buddyList.appendChild(li);
     });
-    letters.filter(r=>!filterAuthor||r.fields.Author===filterAuthor).forEach(r=>{
+    letters.filter(r => !filterAuthor || r.fields.Author === filterAuthor).forEach(r => {
       const div = document.createElement("div");
       div.className = "letter-summary";
-      const date = r.fields.Date?new Date(r.fields.Date).toLocaleDateString():"";
+      const date = r.fields.Date ? new Date(r.fields.Date).toLocaleDateString() : "";
       div.innerHTML = `<strong>${r.fields.Subject||"No Subject"}</strong> - ${r.fields.Author||"Anon"} <span>${date}</span>`;
-      div.onclick = ()=>{
+      div.onclick = () => {
         const modal = document.getElementById("letter-modal");
         modal.querySelector(".modal-subject").innerText = r.fields.Subject||"No Subject";
         modal.querySelector(".modal-author").innerText = r.fields.Author||"Anon";
@@ -107,3 +107,4 @@ setInterval(loadLetters,5000);
 </script>
 </body>
 </html>
+``
