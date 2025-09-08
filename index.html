@@ -169,7 +169,7 @@ button:hover {
 <script>
 const API = "https://letter-worker.904ets.workers.dev/";
 
-// Load letters from Worker
+// Load letters and optionally filter by author
 async function loadLetters(filterAuthor = null) {
   try {
     const res = await fetch(API);
@@ -178,12 +178,12 @@ async function loadLetters(filterAuthor = null) {
     const container = document.getElementById("letters");
     container.innerHTML = "";
 
+    // Collect all authors for buddy list
     const buddies = new Set();
     letters.forEach(r => {
       if (r.fields.Author) buddies.add(r.fields.Author);
     });
 
-    // Populate buddy list
     const buddyList = document.getElementById("buddies");
     buddyList.innerHTML = "";
     Array.from(buddies).forEach(author => {
@@ -193,7 +193,7 @@ async function loadLetters(filterAuthor = null) {
       buddyList.appendChild(li);
     });
 
-    // Show letters
+    // Show letters in inbox
     letters
       .filter(r => !filterAuthor || r.fields.Author === filterAuthor)
       .forEach(r => {
@@ -215,6 +215,7 @@ async function loadLetters(filterAuthor = null) {
 
         container.appendChild(div);
       });
+
   } catch (err) {
     console.error("Error loading letters:", err);
   }
@@ -250,7 +251,7 @@ function closeModal() {
 
 document.getElementById("letter-form").addEventListener("submit", sendLetter);
 
-// Initial load + auto-refresh
+// Initial load + auto-refresh every 5 seconds
 loadLetters();
 setInterval(loadLetters, 5000);
 </script>
