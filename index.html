@@ -17,6 +17,8 @@
   <script>
     // Load existing letters
     async function loadLetters() {
+      // Check for new letters every 5 seconds
+setInterval(loadLetters, 5000);
       const res = await fetch("letters.json");
       const letters = await res.json();
       const container = document.getElementById("letters");
