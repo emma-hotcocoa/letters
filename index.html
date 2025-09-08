@@ -5,19 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Letters Between Us</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Google Font for handwritten style -->
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
     <h1>Letters</h1>
     <div id="letters" class="letters"></div>
-    <form id="letterForm" class="letter-form">
-  <input type="text" id="subjectInput" placeholder="Subject" required>
-  <textarea id="letterInput" placeholder="Write your letter…" required></textarea>
-  <button type="submit">Send</button>
-</form>
 
+    <form id="letterForm" class="letter-form">
+      <input type="text" id="subjectInput" placeholder="Subject" required>
+      <textarea id="letterInput" placeholder="Write your letter…" required></textarea>
+      <button type="submit">Send</button>
+    </form>
   </div>
 
   <script>
@@ -32,73 +31,45 @@
 
         letters.forEach(r => {
           const div = document.createElement("div");
-          div.className = "letter";
-          const date = new Date(r.fields.Date).toLocaleString();
-          div.innerHTML = `<p>${r.fields.Letter}</p><span>- ${r.fields.Author || "Anon"} at ${date}</span>`;
+          div.className = "letter-summary";
+
+          const date = new Date(r.fields.Date).toLocaleDateString();
+          div.innerHTML = `
+            <strong>${r.fields.Subject || "No Subject"}</strong>
+            - ${r.fields.Author || "Anon"}
+            <span>${date}</span>
+          `;
+
+          div.onclick = () => {
+            alert(`${r.fields.Subject || "No Subject"}\n\n${r.fields.Letter}`);
+          }
+
           container.appendChild(div);
         });
-
-        // Scroll to bottom so newest letters are visible
-        container.scrollTop = container.scrollHeight;
       } catch (err) {
         console.error("Error loading letters:", err);
       }
     }
 
-   document.getElementById("letterForm").onsubmit = async (e) => {
-  e.preventDefault();
+    document.getElementById("letterForm").onsubmit = async (e) => {
+      e.preventDefault();
+      const subject = document.getElementById("subjectInput").value;
+      const text = document.getElementById("letterInput").value;
+      const author = "Me"; // Change dynamically if you want
 
-  // Get the subject and letter text
-  const subject = document.getElementById("subjectInput").value;
-  const text = document.getElementById("letterInput").value;
-  const author = "Me"; // or change dynamically
+      await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ letter: text, author, subject })
+      });
 
-  // Send it to the Netlify function
-  await fetch(API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ letter: text, author, subject })
-  });
+      document.getElementById("letterInput").value = "";
+      document.getElementById("subjectInput").value = "";
+      loadLetters();
+    };
 
-  // Clear the inputs
-  document.getElementById("letterInput").value = "";
-  document.getElementById("subjectInput").value = "";
-
-  // Refresh letters
-async function loadLetters() {
-  try {
-    const res = await fetch(API);
-    const letters = await res.json();
-    const container = document.getElementById("letters");
-    container.innerHTML = ""; // clear old letters
-
-    letters.forEach(r => {
-      // Create a div for each letter
-      const div = document.createElement("div");
-      div.className = "letter-summary";
-
-      // Show subject, author, and date
-      const date = new Date(r.fields.Date).toLocaleDateString();
-      div.innerHTML = `
-        <strong>${r.fields.Subject || "No Subject"}</strong>
-        - ${r.fields.Author || "Anon"} 
-        <span>${date}</span>
-      `;
-
-      // Show full letter on click
-      div.onclick = () => {
-        alert(`${r.fields.Subject}\n\n${r.fields.Letter}`);
-      }
-
-      container.appendChild(div);
-    });
-
-  } catch (err) {
-    console.error("Error loading letters:", err);
-  }
-}
-};
-    setInterval(loadLetters, 5000); // auto-refresh every 5 seconds
+    loadLetters();
+    setInterval(loadLetters, 5000); // Auto-refresh every 5 seconds
   </script>
 </body>
 </html>
