@@ -47,64 +47,63 @@ button:hover { background:#0088cc; }
   <p class="modal-body"></p>
   <button onclick="closeModal()">Close</button>
 </div>
+
 <script>
-const API = "https://letter-worker.904ets.workers.dev/";
+// Use localStorage to save letters
+let letters = JSON.parse(localStorage.getItem('letters') || '[]');
 
-async function loadLetters(filterAuthor = null) {
-  try {
-    const res = await fetch(API);
-    const letters = await res.json();
-    const container = document.getElementById("letters");
-    container.innerHTML = "";
-    const buddies = new Set();
-    letters.forEach(r => { if(r.fields.Author) buddies.add(r.fields.Author); });
-    const buddyList = document.getElementById("buddies");
-    buddyList.innerHTML = "";
-    Array.from(buddies).forEach(author => {
-      const li = document.createElement("li");
-      li.textContent = author;
-      li.onclick = () => loadLetters(author);
-      buddyList.appendChild(li);
-    });
-    letters.filter(r => !filterAuthor || r.fields.Author === filterAuthor).forEach(r => {
-      const div = document.createElement("div");
-      div.className = "letter-summary";
-      const date = r.fields.Date ? new Date(r.fields.Date).toLocaleDateString() : "";
-      div.innerHTML = `<strong>${r.fields.Subject||"No Subject"}</strong> - ${r.fields.Author||"Anon"} <span>${date}</span>`;
-      div.onclick = () => {
-        const modal = document.getElementById("letter-modal");
-        modal.querySelector(".modal-subject").innerText = r.fields.Subject||"No Subject";
-        modal.querySelector(".modal-author").innerText = r.fields.Author||"Anon";
-        modal.querySelector(".modal-date").innerText = date;
-        modal.querySelector(".modal-body").innerText = r.fields.Letter;
-        modal.style.display = "block";
-      };
-      container.appendChild(div);
-    });
-  } catch(err){ console.error("Error loading letters:", err); }
+function saveLetters() {
+  localStorage.setItem('letters', JSON.stringify(letters));
 }
 
-async function sendLetter(e) {
+function renderLetters(filterAuthor = null) {
+  const container = document.getElementById('letters');
+  container.innerHTML = '';
+  const buddies = new Set();
+  letters.forEach(l => { if (l.author) buddies.add(l.author); });
+  const buddyList = document.getElementById('buddies');
+  buddyList.innerHTML = '';
+  Array.from(buddies).forEach(author => {
+    const li = document.createElement('li');
+    li.textContent = author;
+    li.onclick = () => renderLetters(author);
+    buddyList.appendChild(li);
+  });
+  letters.filter(l => !filterAuthor || l.author === filterAuthor).forEach(l => {
+    const div = document.createElement('div');
+    div.className = 'letter-summary';
+    const date = new Date(l.date).toLocaleString();
+    div.innerHTML = `<strong>${l.subject||"No Subject"}</strong> - ${l.author||"Anon"} <span>${date}</span>`;
+    div.onclick = () => {
+      const modal = document.getElementById('letter-modal');
+      modal.querySelector('.modal-subject').innerText = l.subject||"No Subject";
+      modal.querySelector('.modal-author').innerText = l.author||"Anon";
+      modal.querySelector('.modal-date').innerText = date;
+      modal.querySelector('.modal-body').innerText = l.text;
+      modal.style.display = 'block';
+    };
+    container.appendChild(div);
+  });
+}
+
+function closeModal() {
+  document.getElementById('letter-modal').style.display = 'none';
+}
+
+document.getElementById('letter-form').addEventListener('submit', e => {
   e.preventDefault();
-  const author = document.getElementById("author").value;
-  const subject = document.getElementById("subject").value;
-  const letter = document.getElementById("letter-text").value;
-  if(!letter) return alert("Please write a letter!");
-  try{
-    await fetch(API, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({author, subject, letter})});
-    document.getElementById("letter-text").value="";
-    document.getElementById("subject").value="";
-    loadLetters();
-  }catch(err){console.error("Error sending letter:", err);}
-}
+  const author = document.getElementById('author').value || 'Anon';
+  const subject = document.getElementById('subject').value;
+  const text = document.getElementById('letter-text').value;
+  if (!text) return alert("Please write a letter!");
+  letters.push({ author, subject, text, date: new Date().toISOString() });
+  saveLetters();
+  renderLetters();
+  document.getElementById('letter-text').value = '';
+  document.getElementById('subject').value = '';
+});
 
-function closeModal(){ document.getElementById("letter-modal").style.display="none"; }
-
-document.getElementById("letter-form").addEventListener("submit", sendLetter);
-
-loadLetters();
-setInterval(loadLetters,5000);
+renderLetters();
 </script>
 </body>
 </html>
-``
