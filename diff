@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Letters Between Us 💌</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Letters Between Us</h1>
+
+  <form id="letterForm">
+    <textarea id="letterInput" placeholder="Write your letter here..." required></textarea>
+    <button type="submit">Send</button>
+  </form>
+
+  <div id="letters"></div>
+
+  <script>
+    // Load existing letters
+    async function loadLetters() {
+      const res = await fetch("letters.json");
+      const letters = await res.json();
+      const container = document.getElementById("letters");
+      container.innerHTML = "";
+      letters.forEach(l => {
+        const div = document.createElement("div");
+        div.className = "letter";
+        div.textContent = l;
+        container.appendChild(div);
+      });
+    }
+
+    loadLetters();
+
+    // Add new letter (but doesn't save yet)
+    document.getElementById("letterForm").onsubmit = (e) => {
+      e.preventDefault();
+      const text = document.getElementById("letterInput").value;
+      alert("Right now, saving letters requires editing the file. This is just a demo!");
+    }
+  </script>
+</body>
+</html>
