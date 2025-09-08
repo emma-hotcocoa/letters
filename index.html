@@ -167,9 +167,10 @@ button:hover {
 </div>
 
 <script>
+// --- Set your Worker URL here ---
 const API = "https://letter-worker.904ets.workers.dev/";
 
-// Load letters and optionally filter by author
+// Load letters from Worker, optionally filter by author
 async function loadLetters(filterAuthor = null) {
   try {
     const res = await fetch(API);
@@ -180,9 +181,7 @@ async function loadLetters(filterAuthor = null) {
 
     // Collect all authors for buddy list
     const buddies = new Set();
-    letters.forEach(r => {
-      if (r.fields.Author) buddies.add(r.fields.Author);
-    });
+    letters.forEach(r => { if (r.fields.Author) buddies.add(r.fields.Author); });
 
     const buddyList = document.getElementById("buddies");
     buddyList.innerHTML = "";
@@ -218,9 +217,11 @@ async function loadLetters(filterAuthor = null) {
 
   } catch (err) {
     console.error("Error loading letters:", err);
+    // Optionally, you could display a friendly message in the inbox
   }
 }
 
+// Send new letter to Worker
 async function sendLetter(event) {
   event.preventDefault();
   const author = document.getElementById("author").value;
