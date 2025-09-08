@@ -1,0 +1,37 @@
+body {
+  font-family: "Georgia", serif;
+  background: #fff0f5;
+  color: #333;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  color: #c71585;
+}
+
+textarea {
+  width: 80%;
+  height: 100px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+button {
+  background: #c71585;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.letter {
+  border: 1px solid #c71585;
+  background: white;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 500px;
+}
