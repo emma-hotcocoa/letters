@@ -70,6 +70,20 @@ textarea {
   font-family: 'Patrick Hand', cursive;
   font-size: 1em;
 }
+.letter-summary {
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  background: #fff7e6;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.letter-summary:hover {
+  background: #fff3dd;
+}
+
 
 /* Send button style */
 button {
