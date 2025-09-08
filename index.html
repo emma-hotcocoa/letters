@@ -8,6 +8,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div id="letter-modal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%); background:#fffdf5; padding:20px; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.2); z-index:1000;">
+  <h2 class="modal-subject"></h2>
+  <p><em>From: <span class="modal-author"></span> | <span class="modal-date"></span></em></p>
+  <p class="modal-body"></p>
+  <button onclick="closeModal()">Close</button>
+</div>
+
   <div class="container">
     <h1>Letters</h1>
     <div id="letters" class="letters"></div>
