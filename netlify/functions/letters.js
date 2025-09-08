@@ -1,5 +1,4 @@
 // Netlify function to talk to Airtable
-import fetch from "node-fetch";
 
 export async function handler(event, context) {
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
