@@ -45,24 +45,28 @@
       }
     }
 
-    document.getElementById("letterForm").onsubmit = async (e) => {
-      e.preventDefault();
-      const text = document.getElementById("letterInput").value;
-      const author = "Me"; // change dynamically if you want
-      try {
-        await fetch(API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ letter: text, author })
-        });
-        document.getElementById("letterInput").value = "";
-        loadLetters();
-      } catch (err) {
-        console.error("Error sending letter:", err);
-      }
-    };
+   document.getElementById("letterForm").onsubmit = async (e) => {
+  e.preventDefault();
 
-    loadLetters();
+  // Get the subject and letter text
+  const subject = document.getElementById("subjectInput").value;
+  const text = document.getElementById("letterInput").value;
+  const author = "Me"; // or change dynamically
+
+  // Send it to the Netlify function
+  await fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ letter: text, author, subject })
+  });
+
+  // Clear the inputs
+  document.getElementById("letterInput").value = "";
+  document.getElementById("subjectInput").value = "";
+
+  // Refresh letters
+  loadLetters();
+};
     setInterval(loadLetters, 5000); // auto-refresh every 5 seconds
   </script>
 </body>
