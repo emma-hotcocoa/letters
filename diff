@@ -38,5 +38,45 @@
       alert("Right now, saving letters requires editing the file. This is just a demo!");
     }
   </script>
+  <script>
+  // This is the URL of your Netlify function
+  const API = "/.netlify/functions/letters";
+
+  // 1. Load all letters from Airtable
+  async function loadLetters() {
+    const res = await fetch(API);
+    const letters = await res.json();
+    const container = document.getElementById("letters");
+    container.innerHTML = ""; // clear old letters
+
+    letters.forEach(r => {
+      const div = document.createElement("div");
+      div.className = "letter";
+      // show author and letter text
+      div.textContent = `${r.fields.Author || "Anon"}: ${r.fields.Letter}`;
+      container.appendChild(div);
+    });
+  }
+
+  // 2. Send a new letter
+  document.getElementById("letterForm").onsubmit = async (e) => {
+    e.preventDefault();
+    const text = document.getElementById("letterInput").value;
+    const author = "Me"; // you can change this to your name or add a field
+
+    await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ letter: text, author })
+    });
+
+    document.getElementById("letterInput").value = ""; // clear box
+    loadLetters(); // refresh letters
+  };
+
+  // Load letters when page opens
+  loadLetters();
+</script>
+
 </body>
 </html>
