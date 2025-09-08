@@ -3,112 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <title>Letters App - AIM Style</title>
+<link rel="stylesheet" href="style.css">
 <style>
-  /* Body & Container */
-  body {
-    font-family: Verdana, sans-serif;
-    background-color: #e6e6e6;
-    color: #000;
-    display: flex;
-    justify-content: center;
-    padding-top: 20px;
-  }
+/* ----- Body & Layout ----- */
+body {
+  font-family: Verdana, sans-serif;
+  background-color: #e6e6e6;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
 
-  .container {
-    width: 600px;
-    background: #fff;
-    border: 2px solid #00aaff;
-    border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    padding: 15px;
-  }
+.container {
+  width: 700px;
+  background: #fff;
+  border: 2px solid #00aaff;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: row;
+  padding: 15px;
+}
 
-  h1 {
-    text-align: center;
-    color: #00aaff;
-    margin-bottom: 15px;
-  }
+/* ----- Buddy List ----- */
+.buddy-list {
+  width: 150px;
+  border-right: 2px solid #00aaff;
+  padding-right: 10px;
+  margin-right: 10px;
+}
 
-  /* Inbox / Letter summaries */
-  .letters {
-    max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 10px;
-  }
+.buddy-list h3 {
+  color: #00aaff;
+  margin-bottom: 5px;
+}
 
-  .letter-summary {
-    background: #cceeff;
-    padding: 8px;
-    margin-bottom: 4px;
-    border: 1px solid #00aaff;
-    border-radius: 3px;
-    cursor: pointer;
-  }
+.buddy-list ul {
+  list-style: none;
+  padding: 0;
+}
 
-  .letter-summary:hover {
-    background: #99ddff;
-  }
+.buddy-list li {
+  background: #cceeff;
+  padding: 5px;
+  margin-bottom: 3px;
+  border-radius: 3px;
+  cursor: pointer;
+}
 
-  /* Form */
-  .letter-form {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
+.buddy-list li:hover {
+  background: #99ddff;
+}
 
-  input, textarea {
-    border: 1px solid #00aaff;
-    border-radius: 3px;
-    padding: 5px;
-    font-family: Verdana, sans-serif;
-    font-size: 14px;
-  }
+/* ----- Main Content ----- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-  textarea {
-    resize: none;
-    height: 80px;
-  }
+/* Inbox / Letter summaries */
+.letters {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
 
-  button {
-    background-color: #00aaff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px;
-    cursor: pointer;
-    font-weight: bold;
-  }
+.letter-summary {
+  background: #cceeff;
+  padding: 8px;
+  margin-bottom: 4px;
+  border: 1px solid #00aaff;
+  border-radius: 3px;
+  cursor: pointer;
+}
 
-  button:hover {
-    background-color: #0088cc;
-  }
+.letter-summary:hover {
+  background: #99ddff;
+}
 
-  /* Modal */
-  #letter-modal {
-    display: none;
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #ffffff;
-    border: 2px solid #00aaff;
-    border-radius: 6px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    padding: 15px;
-    z-index: 1000;
-    width: 400px;
-  }
+/* Form */
+.letter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
-  #letter-modal button {
-    margin-top: 10px;
-    width: 100%;
-  }
+input, textarea {
+  border: 1px solid #00aaff;
+  border-radius: 3px;
+  padding: 5px;
+  font-family: Verdana, sans-serif;
+  font-size: 14px;
+}
+
+textarea {
+  resize: none;
+  height: 80px;
+}
+
+button {
+  background-color: #00aaff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #0088cc;
+}
+
+/* Modal */
+#letter-modal {
+  display: none;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 2px solid #00aaff;
+  border-radius: 6px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  padding: 15px;
+  z-index: 1000;
+  width: 400px;
+}
+
+#letter-modal button {
+  margin-top: 10px;
+  width: 100%;
+}
 </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Your Letters</h1>
+<div class="container">
+  <div class="buddy-list">
+    <h3>Buddies</h3>
+    <ul id="buddies"></ul>
+  </div>
 
+  <div class="main-content">
+    <h1>Your Letters</h1>
     <div id="letters" class="letters"></div>
 
     <form id="letter-form" class="letter-form">
@@ -118,86 +157,102 @@
       <button type="submit">Send</button>
     </form>
   </div>
+</div>
 
-  <div id="letter-modal">
-    <h2 class="modal-subject"></h2>
-    <p><em>From: <span class="modal-author"></span> | <span class="modal-date"></span></em></p>
-    <p class="modal-body"></p>
-    <button onclick="closeModal()">Close</button>
-  </div>
+<div id="letter-modal">
+  <h2 class="modal-subject"></h2>
+  <p><em>From: <span class="modal-author"></span> | <span class="modal-date"></span></em></p>
+  <p class="modal-body"></p>
+  <button onclick="closeModal()">Close</button>
+</div>
 
-  <script>
-    const API = "https://letter-worker.904ets.workers.dev/";
+<script>
+const API = "https://letter-worker.904ets.workers.dev/";
 
-    async function loadLetters() {
-      try {
-        const res = await fetch(API);
-        const letters = await res.json();
-        const container = document.getElementById("letters");
-        container.innerHTML = "";
+// Load letters from Worker
+async function loadLetters(filterAuthor = null) {
+  try {
+    const res = await fetch(API);
+    const letters = await res.json();
 
-        letters.forEach(r => {
-          const div = document.createElement("div");
-          div.className = "letter-summary";
+    const container = document.getElementById("letters");
+    container.innerHTML = "";
 
-          const date = r.fields.Date
-            ? new Date(r.fields.Date).toLocaleDateString()
-            : "";
+    const buddies = new Set();
+    letters.forEach(r => {
+      if (r.fields.Author) buddies.add(r.fields.Author);
+    });
 
-          div.innerHTML = `
-            <strong>${r.fields.Subject || "No Subject"}</strong>
-            - ${r.fields.Author || "Anon"}
-            <span>${date}</span>
-          `;
+    // Populate buddy list
+    const buddyList = document.getElementById("buddies");
+    buddyList.innerHTML = "";
+    Array.from(buddies).forEach(author => {
+      const li = document.createElement("li");
+      li.textContent = author;
+      li.onclick = () => loadLetters(author);
+      buddyList.appendChild(li);
+    });
 
-          div.onclick = () => {
-            const modal = document.getElementById("letter-modal");
-            modal.querySelector(".modal-subject").innerText = r.fields.Subject || "No Subject";
-            modal.querySelector(".modal-author").innerText = r.fields.Author || "Anon";
-            modal.querySelector(".modal-date").innerText = date;
-            modal.querySelector(".modal-body").innerText = r.fields.Letter;
-            modal.style.display = "block";
-          }
+    // Show letters
+    letters
+      .filter(r => !filterAuthor || r.fields.Author === filterAuthor)
+      .forEach(r => {
+        const div = document.createElement("div");
+        div.className = "letter-summary";
 
-          container.appendChild(div);
-        });
-      } catch (err) {
-        console.error("Error loading letters:", err);
-      }
-    }
+        const date = r.fields.Date ? new Date(r.fields.Date).toLocaleDateString() : "";
 
-    async function sendLetter(event) {
-      event.preventDefault();
-      const author = document.getElementById("author").value;
-      const subject = document.getElementById("subject").value;
-      const letter = document.getElementById("letter-text").value;
+        div.innerHTML = `<strong>${r.fields.Subject || "No Subject"}</strong> - ${r.fields.Author || "Anon"} <span>${date}</span>`;
 
-      if (!letter) return alert("Please write a letter!");
+        div.onclick = () => {
+          const modal = document.getElementById("letter-modal");
+          modal.querySelector(".modal-subject").innerText = r.fields.Subject || "No Subject";
+          modal.querySelector(".modal-author").innerText = r.fields.Author || "Anon";
+          modal.querySelector(".modal-date").innerText = date;
+          modal.querySelector(".modal-body").innerText = r.fields.Letter;
+          modal.style.display = "block";
+        };
 
-      try {
-        await fetch(API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ author, subject, letter })
-        });
+        container.appendChild(div);
+      });
+  } catch (err) {
+    console.error("Error loading letters:", err);
+  }
+}
 
-        document.getElementById("letter-text").value = "";
-        document.getElementById("subject").value = "";
+async function sendLetter(event) {
+  event.preventDefault();
+  const author = document.getElementById("author").value;
+  const subject = document.getElementById("subject").value;
+  const letter = document.getElementById("letter-text").value;
 
-        loadLetters();
-      } catch (err) {
-        console.error("Error sending letter:", err);
-      }
-    }
+  if (!letter) return alert("Please write a letter!");
 
-    function closeModal() {
-      document.getElementById("letter-modal").style.display = "none";
-    }
+  try {
+    await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ author, subject, letter })
+    });
 
-    document.getElementById("letter-form").addEventListener("submit", sendLetter);
+    document.getElementById("letter-text").value = "";
+    document.getElementById("subject").value = "";
 
     loadLetters();
-    setInterval(loadLetters, 5000);
-  </script>
+  } catch (err) {
+    console.error("Error sending letter:", err);
+  }
+}
+
+function closeModal() {
+  document.getElementById("letter-modal").style.display = "none";
+}
+
+document.getElementById("letter-form").addEventListener("submit", sendLetter);
+
+// Initial load + auto-refresh
+loadLetters();
+setInterval(loadLetters, 5000);
+</script>
 </body>
 </html>
